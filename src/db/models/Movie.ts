@@ -8,15 +8,15 @@ export interface IMovie extends Document {
   genre: string[];
   director: string;
   cast: string[];
-  rating: number; // e.g., 0-10 or 0-5
   posterUrl?: string;
   trailerUrl?: string;
+  imageGalleryUrls?: string[];
   language: string;
   country: string;
-  ageRating?: string; // e.g., "PG", "PG-13", "R", "18+"
-  isActive: boolean; // whether the movie is currently showing
+  ageRating: string; // e.g., "PG", "PG-13", "R", "18+"
+  dateTimeShowing: Date;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
 const MovieSchema: Schema = new Schema(
@@ -60,12 +60,6 @@ const MovieSchema: Schema = new Schema(
       type: [String],
       default: [],
     },
-    rating: {
-      type: Number,
-      min: [0, 'Rating cannot be less than 0'],
-      max: [10, 'Rating cannot be more than 10'],
-      default: 0,
-    },
     posterUrl: {
       type: String,
       trim: true,
@@ -73,6 +67,10 @@ const MovieSchema: Schema = new Schema(
     trailerUrl: {
       type: String,
       trim: true,
+    },
+    imageGalleryUrls: {
+      type: [String],
+      default: [],
     },
     language: {
       type: String,
@@ -86,12 +84,13 @@ const MovieSchema: Schema = new Schema(
     },
     ageRating: {
       type: String,
+      required: [true, 'Please provide age rating'],
       enum: ['G', 'PG', 'PG-13', 'R', 'NC-17', '18+', 'U', 'UA', 'A'],
       trim: true,
     },
-    isActive: {
-      type: Boolean,
-      default: true,
+    dateTimeShowing: {
+      type: Date,
+      required: [true, 'Please provide showing date and time'],
     },
   },
   {
@@ -102,6 +101,6 @@ const MovieSchema: Schema = new Schema(
 // Create indexes for better query performance
 MovieSchema.index({ title: 'text', description: 'text' });
 MovieSchema.index({ genre: 1 });
-MovieSchema.index({ isActive: 1 });
+MovieSchema.index({ dateTimeShowing: 1 });
 
 export default mongoose.models.Movie || mongoose.model<IMovie>('Movie', MovieSchema);
