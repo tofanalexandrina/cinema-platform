@@ -1,54 +1,43 @@
-import mongoose from 'mongoose';
+import { MongoClient, ServerApiVersion, Db } from 'mongodb';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
+if (!uri) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections from growing exponentially
- * during API Route usage.
- */
-interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-}
-
-declare global {
-  var mongoose: MongooseCache | undefined;
-}
-
-let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
-
-if (!global.mongoose) {
-  global.mongoose = cached;
-}
-
-async function connectDB() {
-  if (cached.conn) {
-    return cached.conn;
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
   }
+});
 
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
+// Cache the client promise to avoid multiple connections in development
+let clientPromise: Promise<MongoClient>;
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-      return mongoose;
-    });
+if (process.env.NODE_ENV === 'development') {
+  // In development mode, use a global variable so the client is not recreated on hot reloads
+  let globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>;
+  };
+
+  if (!globalWithMongo._mongoClientPromise) {
+    globalWithMongo._mongoClientPromise = client.connect();
   }
-
-  try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
-  }
-
-  return cached.conn;
+  clientPromise = globalWithMongo._mongoClientPromise;
+} else {
+  // In production mode, it's best to not use a global variable
+  clientPromise = client.connect();
 }
 
-export default connectDB;
+// Export the client promise
+export default clientPromise;
+
+// Helper function to get the database
+export async function getDatabase(dbName: string = 'cinema-platform'): Promise<Db> {
+  const client = await clientPromise;
+  return client.db(dbName);
+}

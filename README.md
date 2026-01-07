@@ -35,3 +35,26 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+
+//task 0
+
+commit & PR
+
+//task 1
+setup the cloud storage for media and upload 1 photo
+
+
+//task 2
+connect the storage api to the app and retrieve the photo 
+on the homepage (no design requirements, just the functionality test)
+
+//task 3
+think about how the storage structure:
+
+how do we know what photo is for what film
+how do we retrieve the photos in different sizes (thumbnail/gallery)
+how do we delete the photos from storage when deleting a movie from mongodb
+
+

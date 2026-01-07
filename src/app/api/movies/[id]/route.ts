@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/db/mongodb';
-import Movie from '@/db/models/Movie';
+import { getDatabase } from '@/db/mongodb';
+import { ObjectId } from 'mongodb';
 
 // GET /api/movies/[id] - Get a single movie by ID
 export async function GET(
@@ -8,9 +8,10 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectDB();
+    const db = await getDatabase();
+    const moviesCollection = db.collection('movies');
 
-    const movie = await Movie.findById(params.id);
+    const movie = await moviesCollection.findOne({ _id: new ObjectId(params.id) });
 
     if (!movie) {
       return NextResponse.json(
@@ -41,20 +42,23 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectDB();
+    const db = await getDatabase();
+    const moviesCollection = db.collection('movies');
 
     const body = await request.json();
+    
+    const updateDoc = {
+      ...body,
+      updatedAt: new Date(),
+    };
 
-    const movie = await Movie.findByIdAndUpdate(
-      params.id,
-      body,
-      {
-        new: true, // Return the updated document
-        runValidators: true, // Run schema validators
-      }
+    const result = await moviesCollection.findOneAndUpdate(
+      { _id: new ObjectId(params.id) },
+      { $set: updateDoc },
+      { returnDocument: 'after' }
     );
 
-    if (!movie) {
+    if (!result) {
       return NextResponse.json(
         { success: false, error: 'Movie not found' },
         { status: 404 }
@@ -64,22 +68,12 @@ export async function PUT(
     return NextResponse.json(
       {
         success: true,
-        data: movie,
+        data: result,
       },
       { status: 200 }
     );
   } catch (error: any) {
     console.error('Error updating movie:', error);
-
-    // Handle validation errors
-    if (error.name === 'ValidationError') {
-      const errors = Object.values(error.errors).map((err: any) => err.message);
-      return NextResponse.json(
-        { success: false, error: errors },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { success: false, error: 'Failed to update movie' },
       { status: 500 }
@@ -93,11 +87,12 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await connectDB();
+    const db = await getDatabase();
+    const moviesCollection = db.collection('movies');
 
-    const movie = await Movie.findByIdAndDelete(params.id);
+    const result = await moviesCollection.deleteOne({ _id: new ObjectId(params.id) });
 
-    if (!movie) {
+    if (result.deletedCount === 0) {
       return NextResponse.json(
         { success: false, error: 'Movie not found' },
         { status: 404 }

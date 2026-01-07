@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/db/mongodb';
-import Movie from '@/db/models/Movie';
+import { getDatabase } from '@/db/mongodb';
 
 // GET /api/movies - Get all movies
 export async function GET(request: NextRequest) {
   try {
-    await connectDB();
+    const db = await getDatabase();
+    const moviesCollection = db.collection('movies');
 
-    const movies = await Movie.find({}).sort({ createdAt: -1 }).lean();
+    const movies = await moviesCollection
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
 
     return NextResponse.json(
       {
@@ -28,32 +31,29 @@ export async function GET(request: NextRequest) {
 // POST /api/movies - Create a new movie
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    const db = await getDatabase();
+    const moviesCollection = db.collection('movies');
 
     const body = await request.json();
 
-    // Create movie
-    const movie = await Movie.create(body);
+    // Add timestamps
+    const movieDocument = {
+      ...body,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const result = await moviesCollection.insertOne(movieDocument);
 
     return NextResponse.json(
       {
         success: true,
-        data: movie,
+        data: { _id: result.insertedId, ...movieDocument },
       },
       { status: 201 }
     );
   } catch (error: any) {
     console.error('Error creating movie:', error);
-
-    // Handle validation errors
-    if (error.name === 'ValidationError') {
-      const errors = Object.values(error.errors).map((err: any) => err.message);
-      return NextResponse.json(
-        { success: false, error: errors },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(
       { success: false, error: 'Failed to create movie' },
       { status: 500 }
