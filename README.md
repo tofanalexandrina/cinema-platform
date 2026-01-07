@@ -38,23 +38,21 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 
-//task 0
 
-commit & PR
+//cloud storage notes:
 
-//task 1
-setup the cloud storage for media and upload 1 photo
+- how do we know what photo is for what film
+1. group media files for a movie in a separate folder, where the folder name is the movie id
+2. use the movie id in the media file name, and then filter through the files based on the needed movie
 
+- how do we retrieve the photos in different sizes (thumbnail/gallery)
+1. use query parameters in the URL for the media file
+2. use the Cloudinary SDK (functions in a separate code file)
+3. create the thumbnail when uploading, and download it directly when needed
 
-//task 2
-connect the storage api to the app and retrieve the photo 
-on the homepage (no design requirements, just the functionality test)
+- how do we delete the photos from storage when deleting a movie from mongodb
+1. use the Cloudinary SDK (or API routes) to create a function that deletes media files when we delete from database
+*same thing applies to uploading process
 
-//task 3
-think about how the storage structure:
-
-how do we know what photo is for what film
-how do we retrieve the photos in different sizes (thumbnail/gallery)
-how do we delete the photos from storage when deleting a movie from mongodb
-
-
+//next step
+manually design the pages 
