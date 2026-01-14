@@ -1,6 +1,25 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import NavigationBar from "@/components/layout/NavigationBar";
+import Footer from "@/components/layout/Footer";
+
+const sfCompact = localFont({
+  src: [
+    {
+      path: "../../public/fonts/SF-Pro-Text-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/SF-Pro-Text-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-sf-compact",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${sfCompact.variable} ${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        style={{ fontFamily: 'var(--font-sf-compact)' }}
       >
-        {children}
+        <NavigationBar/>
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

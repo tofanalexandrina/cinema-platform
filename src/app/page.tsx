@@ -10,15 +10,31 @@ export default async function Home() {
   const movie = await getMovie();
   
   return (
-    <main>      
+    <main>
       {movie?.posterUrl ? (
         <div>
-          <Image
-            src={movie.posterUrl}
-            alt={movie.title || "Movie poster"}
-            width={300}
-            height={450}
-          />
+          <Image src={movie.posterUrl} alt={movie.title || "Movie poster"} width={300} height={450} />
+        </div>
+      ) : (
+        <p>No movie found</p>
+      )}
+      {movie?.posterUrl ? (
+        <div>
+          <Image src={movie.posterUrl} alt={movie.title || "Movie poster"} width={300} height={450} />
+        </div>
+      ) : (
+        <p>No movie found</p>
+      )}
+      {movie?.posterUrl ? (
+        <div>
+          <Image src={movie.posterUrl} alt={movie.title || "Movie poster"} width={300} height={450} />
+        </div>
+      ) : (
+        <p>No movie found</p>
+      )}
+      {movie?.posterUrl ? (
+        <div>
+          <Image src={movie.posterUrl} alt={movie.title || "Movie poster"} width={300} height={450} />
         </div>
       ) : (
         <p>No movie found</p>
