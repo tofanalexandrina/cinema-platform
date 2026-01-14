@@ -6,7 +6,7 @@ export default function NavigationBar() {
     <nav className="bg-neutral-950 text-white shadow-lg">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center">
-          <img src="/logo.png" alt="CinemaPlatform Logo" className="w-auto pb-2" />
+          <Link href="/"><img src="/logo.png" alt="CinemaPlatform Logo" className="w-auto pb-2" /></Link>
         </div>
         <div className="flex gap-8 mr-6">
           <Link href="/" className="hover:text-gray-300 transition-colors">
