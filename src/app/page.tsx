@@ -8,7 +8,6 @@ async function getMovie() {
 
 export default async function Home() {
   const movie = await getMovie();
-  
   return (
     <main>
       {movie?.posterUrl ? (
