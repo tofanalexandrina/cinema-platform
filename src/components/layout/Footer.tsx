@@ -1,7 +1,7 @@
 import React from 'react';
 import { Linkedin } from 'lucide-react';
 
-const Footer: React.FC = () => {
+export default function Footer(){
     return (
         <footer className="bg-black text-white py-10">
             <div className="container mx-auto px-4 max-w-screen-xl">
@@ -29,4 +29,3 @@ const Footer: React.FC = () => {
     );
 };
 
-export default Footer;
