@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDatabase } from '@/db/mongodb';
-import { ObjectId } from 'mongodb';
+import { MovieService } from '@/services/movieService';
 
 // GET /api/movies/[id] - Get a single movie by ID
 export async function GET(
@@ -8,17 +7,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const db = await getDatabase();
-    const moviesCollection = db.collection('movies');
-
-    const movie = await moviesCollection.findOne({ _id: new ObjectId(params.id) });
-
-    if (!movie) {
-      return NextResponse.json(
-        { success: false, error: 'Movie not found' },
-        { status: 404 }
-      );
-    }
+    const param = await params;
+    const movie = await MovieService.getById(param.id);
 
     return NextResponse.json(
       {
@@ -27,8 +17,16 @@ export async function GET(
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching movie:', error);
+    
+    if (error.message === 'Movie not found') {
+      return NextResponse.json(
+        { success: false, error: 'Movie not found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
       { success: false, error: 'Failed to fetch movie' },
       { status: 500 }
@@ -42,38 +40,28 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const db = await getDatabase();
-    const moviesCollection = db.collection('movies');
-
+    const param = await params;
     const body = await request.json();
     
-    const updateDoc = {
-      ...body,
-      updatedAt: new Date(),
-    };
+    const movie = await MovieService.update(param.id, body);
 
-    const result = await moviesCollection.findOneAndUpdate(
-      { _id: new ObjectId(params.id) },
-      { $set: updateDoc },
-      { returnDocument: 'after' }
+    return NextResponse.json(
+      {
+        success: true,
+        data: movie,
+      },
+      { status: 200 }
     );
-
-    if (!result) {
+  } catch (error: any) {
+    console.error('Error updating movie:', error);
+    
+    if (error.message === 'Movie not found') {
       return NextResponse.json(
         { success: false, error: 'Movie not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: result,
-      },
-      { status: 200 }
-    );
-  } catch (error: any) {
-    console.error('Error updating movie:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to update movie' },
       { status: 500 }
@@ -87,17 +75,8 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const db = await getDatabase();
-    const moviesCollection = db.collection('movies');
-
-    const result = await moviesCollection.deleteOne({ _id: new ObjectId(params.id) });
-
-    if (result.deletedCount === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Movie not found' },
-        { status: 404 }
-      );
-    }
+    const param = await params;
+    await MovieService.delete(param.id);
 
     return NextResponse.json(
       {
@@ -106,8 +85,16 @@ export async function DELETE(
       },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting movie:', error);
+    
+    if (error.message === 'Movie not found') {
+      return NextResponse.json(
+        { success: false, error: 'Movie not found' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
       { success: false, error: 'Failed to delete movie' },
       { status: 500 }
