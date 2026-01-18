@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDatabase } from '@/db/mongodb';
+import { MovieService } from '@/services/movieService';
 
 // GET /api/movies - Get all movies
 export async function GET(request: NextRequest) {
   try {
-    const db = await getDatabase();
-    const moviesCollection = db.collection('movies');
-
-    const movies = await moviesCollection
-      .find({})
-      .sort({ createdAt: -1 })
-      .toArray();
+    const movies = await MovieService.getAll();
 
     return NextResponse.json(
       {
@@ -31,24 +25,13 @@ export async function GET(request: NextRequest) {
 // POST /api/movies - Create a new movie
 export async function POST(request: NextRequest) {
   try {
-    const db = await getDatabase();
-    const moviesCollection = db.collection('movies');
-
     const body = await request.json();
-
-    // Add timestamps
-    const movieDocument = {
-      ...body,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    const result = await moviesCollection.insertOne(movieDocument);
+    const movie = await MovieService.create(body);
 
     return NextResponse.json(
       {
         success: true,
-        data: { _id: result.insertedId, ...movieDocument },
+        data: movie,
       },
       { status: 201 }
     );
