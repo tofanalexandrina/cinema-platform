@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -38,6 +38,11 @@ export const metadata: Metadata = {
     icon:'logo.png'
   }
 };
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1
+}
 
 export default function RootLayout({
   children,
