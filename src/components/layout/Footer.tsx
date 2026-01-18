@@ -1,5 +1,5 @@
-import React from 'react';
-import { Linkedin } from 'lucide-react';
+import React from "react";
+import { Linkedin } from "lucide-react";
 
 export default function Footer(){
     return (
