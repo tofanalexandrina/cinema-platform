@@ -13,7 +13,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
     _id: "695d84c48f0f9b19b083ae37",
     title: "Inception",
     description:
-      "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.",
+      "Mintea ta este scena crimei. Cobb, un hoț iscusit care comite spionaj corporativ prin infiltrarea în subconștientul țintelor sale, primește șansa de a-și recâștiga vechea viață ca plată pentru o sarcină considerată imposibilă: „inception”, implantarea ideii altei persoane în subconștientul unei ținte.",
     duration: 148,
     releaseDate: "2010-07-16",
     genre: ["Action", "Sci-Fi", "Thriller"],
@@ -52,17 +52,17 @@ export default async function Movie({ params }: { params: { id: string } }) {
         </div>
         <div className="flex-1 pl-8">
           <div className="flex items-baseline gap-2">
-            <h1 className="font-bold text-2xl">{movie.title}</h1>
+            <h1 className="font-bold text-5xl">{movie.title}</h1>
             <p>{new Date(movie.releaseDate).getFullYear()}</p>
           </div>
-          <div className="flex gap-5">
-            <div className="p-2 bg-gray-300 rounded-xl">
+          <div className="flex gap-5 mt-3 mb-3">
+            <div className="p-2 bg-gray-300 rounded-lg">
               <p>{movie.duration} minute</p>
             </div>
-            <div className="p-2 bg-amber-400 rounded-xl">
+            <div className="p-2 bg-amber-400 rounded-lg">
               <p>{movie.ageRating}</p>
             </div>
-            <div className="p-2 bg-gray-300 rounded-xl">
+            <div className="p-2 bg-gray-300 rounded-lg">
               <p>{movie.country}</p>
             </div>
           </div>
@@ -77,10 +77,10 @@ export default async function Movie({ params }: { params: { id: string } }) {
               {movie.cast.join(", ")}
             </p>
           </div>
-          <div className="mt-5 mb-5">
+          <div className="mt-8 mb-8 p-2 bg-amber-400 rounded-lg">
             <p>Data si Ora (to do)</p>
           </div>
-          <div className="mt-5">
+          <div>
             <p>{movie.description}</p>
           </div>
         </div>
