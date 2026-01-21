@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   title: "Cinema în aer liber",
   description: "Cinema în aer liber - parc Titan",
   icons: {
-    icon:'logo.png'
+    icon:'/logo.png'
   }
 };
 
