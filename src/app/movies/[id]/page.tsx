@@ -77,8 +77,30 @@ export default async function Movie({ params }: { params: { id: string } }) {
               {movie.cast.join(", ")}
             </p>
           </div>
-          <div className="mt-8 mb-8 p-2 bg-amber-400 rounded-lg">
-            <p>Data si Ora (to do)</p>
+          <div className=" mt-7 mb-7 p-3 bg-amber-400 rounded-lg flex items-center gap-4 w-fit">
+            <div className="flex items-center gap-1">
+              <Image
+                src="/calendar.png"
+                alt="Calendar"
+                width={20}
+                height={20}
+              />
+              <span>
+                {new Date(movie.dateTimeShowing).toLocaleDateString("ro-RO", {
+                  day: "numeric",
+                  month: "long",
+                })}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Image src="/clock.png" alt="Clock" width={20} height={20} />
+              <span>
+                {new Date(movie.dateTimeShowing).toLocaleTimeString("ro-RO", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            </div>
           </div>
           <div>
             <p>{movie.description}</p>
