@@ -1,14 +1,8 @@
-import { getDatabase } from "@/db/mongodb";
-import { ObjectId } from "mongodb";
 import Image from "next/image";
-
-// async function getMovie(id: string){
-//     const db=await getDatabase("cinema-platform");
-//     return db.collection("movies").findOne({_id: new ObjectId(id)});
-// }
+import { MovieService } from "@/services/movieService";
 
 export default async function Movie({ params }: { params: { id: string } }) {
-  // const movie = await getMovie(params.id);
+  // const movie = await MovieService.getById(params.id);
   const movie = {
     _id: "695d84c48f0f9b19b083ae37",
     title: "Inception",
