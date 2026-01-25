@@ -1,4 +1,13 @@
 import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+import { Card, CardContent } from "@/components/ui/card";
 import { MovieService } from "@/services/movieService";
 
 export default async function Movie({ params }: { params: { id: string } }) {
@@ -21,10 +30,12 @@ export default async function Movie({ params }: { params: { id: string } }) {
     ],
     posterUrl:
       "https://res.cloudinary.com/dud0oiww7/image/upload/v1768740132/inception_sbshsh.jpg",
-    trailerUrl: "https://www.youtube.com/watch?v=YoHD9XEInc0",
+    trailerUrlId: "YoHD9XEInc0",
     imageGalleryUrls: [
-      "https://example.com/inception1.jpg",
-      "https://example.com/inception2.jpg",
+      "https://res.cloudinary.com/dud0oiww7/image/upload/v1769354694/inception1_fdagaa.webp",
+      "https://res.cloudinary.com/dud0oiww7/image/upload/v1769354694/inception2_dthjzg.jpg",
+      "https://res.cloudinary.com/dud0oiww7/image/upload/v1769354694/inception3_zn3hqo.jpg",
+      "https://res.cloudinary.com/dud0oiww7/image/upload/v1769354693/imception4_lp4kme.jpg",
     ],
     language: "English",
     country: "USA",
@@ -34,8 +45,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
 
   return (
     <main>
-      {/*border-2 border-solid border-gray-950 */}
-      <div className="flex m-10">
+      <div className="flex m-15">
         <div>
           <Image
             src={movie.posterUrl}
@@ -46,7 +56,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
         </div>
         <div className="flex-1 pl-8">
           <div className="flex items-baseline gap-2">
-            <h1 className="font-bold text-5xl">{movie.title}</h1>
+            <h1 className="font-bold text-4xl">{movie.title}</h1>
             <p>{new Date(movie.releaseDate).getFullYear()}</p>
           </div>
           <div className="flex gap-5 mt-3 mb-3">
@@ -101,11 +111,42 @@ export default async function Movie({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-      <section>
-        <h2 className="font-bold">Trailer</h2>
+      <section className="m-15">
+        <h2 className="font-bold text-2xl">Trailer</h2>
+        <div className="aspect-video">
+          <iframe
+            src={`https://www.youtube.com/embed/${movie.trailerUrlId}`}
+            title={`${movie.title} Trailer`}
+            className="w-full h-full mt-5"
+            allow="fullscreen; encrypted-media; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
       </section>
-      <section>
-        <h2 className="font-bold">Galerie</h2>
+      <section className="m-15">
+        <h2 className="font-bold text-2xl">Galerie</h2>
+        {/*opts={{ loop: true }} - for if i want to make the gallery loop */}
+        <Carousel className="mt-5">
+          <CarouselContent>
+            {movie.imageGalleryUrls.map((imageUrl, index) => (
+              <CarouselItem
+                key={index}
+                className="pl-4 md:basis-1/2 lg:basis-1/3"
+              >
+                <div className="relative aspect-video">
+                  <Image
+                    src={imageUrl}
+                    alt={`image ${index + 1}`}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </section>
     </main>
   );
