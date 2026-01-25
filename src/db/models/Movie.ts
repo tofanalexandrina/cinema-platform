@@ -9,7 +9,7 @@ export interface IMovie extends Document {
   director: string;
   cast: string[];
   posterUrl?: string;
-  trailerUrl?: string;
+  trailerUrlId?: string;
   imageGalleryUrls?: string[];
   language: string;
   country: string;
@@ -64,7 +64,7 @@ const MovieSchema: Schema = new Schema(
       type: String,
       trim: true,
     },
-    trailerUrl: {
+    trailerUrlId: {
       type: String,
       trim: true,
     },
