@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Raleway } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import NavigationBar from "@/components/layout/NavigationBar";
@@ -31,6 +31,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const raleway = Raleway({
+  variable: "--font-raleway",
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
+});
+
+
 export const metadata: Metadata = {
   title: "Cinema în aer liber",
   description: "Cinema în aer liber - parc Titan",
@@ -51,11 +59,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${sfCompact.variable} ${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
-        style={{ fontFamily: 'var(--font-sf-compact)' }}
-      >
-        <NavigationBar/>
+      <body className={`${sfCompact.variable} ${geistSans.variable} ${geistMono.variable} ${raleway.variable} antialiased flex flex-col min-h-screen`} style={{ fontFamily: "var(--font-sf-compact)" }}>
+        <NavigationBar />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

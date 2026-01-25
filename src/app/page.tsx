@@ -1,22 +1,14 @@
 import Image from "next/image";
-import { getDatabase } from "@/db/mongodb";
-
-async function getMovie() {
-  const db = await getDatabase("cinema-platform");
-  return db.collection("movies").findOne({});
-}
+import PresentationBanner from "@/components/homepage/presentationBanner";
+import { MovieService } from "@/services/movieService";
 
 export default async function Home() {
-  const movie = await getMovie();
+  const movies = await MovieService.getAll();
+  const movie = movies[0]; // Get the first movie
+
   return (
     <main>
-      {movie?.posterUrl ? (
-        <div>
-          <Image src={movie.posterUrl} alt={movie.title || "Movie poster"} width={300} height={450} />
-        </div>
-      ) : (
-        <p>No movie found</p>
-      )}
+      <PresentationBanner />
       {movie?.posterUrl ? (
         <div>
           <Image src={movie.posterUrl} alt={movie.title || "Movie poster"} width={300} height={450} />
