@@ -1,25 +1,6 @@
 import { getDatabase } from '@/db/mongodb';
 import { ObjectId } from 'mongodb';
-
-export interface Movie {
-  _id?: ObjectId;
-  title: string;
-  description: string;
-  duration: number;
-  releaseDate: Date;
-  genre: string[];
-  director: string;
-  cast: string[];
-  posterUrl?: string;
-  trailerUrl?: string;
-  imageGalleryUrls?: string[];
-  language: string;
-  country: string;
-  ageRating: string;
-  dateTimeShowing: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import { Movie } from '@/types/movie';
 
 export class MovieService {
   /**
@@ -63,6 +44,8 @@ export class MovieService {
 
     const movieDocument = {
       ...movieData,
+      releaseDate: new Date(movieData.releaseDate),
+      dateTimeShowing: new Date(movieData.dateTimeShowing),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -83,10 +66,18 @@ export class MovieService {
     const db = await getDatabase();
     const moviesCollection = db.collection('movies');
 
-    const updateDoc = {
+    const updateDoc: any = {
       ...updateData,
       updatedAt: new Date(),
     };
+
+    // Convert date strings to Date objects
+    if (updateDoc.releaseDate) {
+      updateDoc.releaseDate = new Date(updateDoc.releaseDate);
+    }
+    if (updateDoc.dateTimeShowing) {
+      updateDoc.dateTimeShowing = new Date(updateDoc.dateTimeShowing);
+    }
 
     const result = await moviesCollection.findOneAndUpdate(
       { _id: new ObjectId(id) },
@@ -116,5 +107,40 @@ export class MovieService {
     }
 
     return { success: true };
+  }
+
+  /**
+   * Get movies showing today and tomorrow
+   */
+  static async getTodayAndTomorrowMovies() {
+    const db = await getDatabase();
+    const moviesCollection = db.collection('movies');
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dayAfterTomorrow = new Date(today);
+    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+    
+    console.log('Query range (local time):', {
+      today: today.toLocaleString(),
+      todayISO: today.toISOString(),
+      dayAfterTomorrow: dayAfterTomorrow.toLocaleString(),
+      dayAfterTomorrowISO: dayAfterTomorrow.toISOString()
+    });
+
+    const movies = await moviesCollection
+      .find({
+        dateTimeShowing: {
+          $gte: today,
+          $lt: dayAfterTomorrow,
+        },
+      })
+      .sort({ dateTimeShowing: 1 })
+      .toArray();
+
+    console.log('Fetched movies for today and tomorrow:', movies);
+
+    return movies;
   }
 }
