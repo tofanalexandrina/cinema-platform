@@ -61,7 +61,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${sfCompact.variable} ${geistSans.variable} ${geistMono.variable} ${raleway.variable} antialiased flex flex-col min-h-screen`} style={{ fontFamily: "var(--font-sf-compact)" }}>
         <NavigationBar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 bg-background">{children}</main>
         <Footer />
       </body>
     </html>
