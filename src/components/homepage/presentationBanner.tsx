@@ -9,7 +9,7 @@ export default async function PresentationBanner() {
   const generalInfo = await GeneralInfoService.getGeneralInfo();
 
   return (
-    <div className="w-full flex flex-row justify-between border-2 border-amber-600 gap-2 py-6 font-raleway">
+    <div className="w-full flex flex-row justify-between gap-2 py-6 font-raleway">
       <div className=" flex w-3/5 pl-6 justify-center">
         <div className="w-fit ">
           <div className="w-full flex flex-row justify-between items-baseline">
