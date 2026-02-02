@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { MovieService } from "@/services/movieService";
 
 export default async function Movie({ params }: { params: { id: string } }) {
