@@ -15,13 +15,25 @@ export default function Card({
     <div
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
-      className="border-2 border-solid rounded-sm size-60 bg-gray-200 flex items-center justify-center"
+      className="size-60 perspective-1000"
     >
-      {!isFlipped ? (
-        <Image src={imageUrl} alt="imagine-parteneri" width="100" height="100" />
-      ) : (
-        <h1>{name}</h1>
-      )}
+      <div
+        className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${
+          isFlipped ? "rotate-y-180" : ""
+        }`}
+      >
+        <div className="absolute w-full h-full backface-hidden border-2 border-solid rounded-sm bg-gray-200 flex items-center justify-center">
+          <Image
+            src={imageUrl}
+            alt="imagine-parteneri"
+            width="100"
+            height="100"
+          />
+        </div>
+        <div className="absolute w-full h-full backface-hidden border-2 border-solid rounded-sm bg-gray-200 flex items-center justify-center rotate-y-180">
+          <h1 className="text-center p-4">{name}</h1>
+        </div>
+      </div>
     </div>
   );
 }
