@@ -2,9 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Raleway } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import NavigationBar from "@/components/layout/NavigationBar";
-import Footer from "@/components/layout/Footer";
-
 const sfCompact = localFont({
   src: [
     {
@@ -60,9 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${sfCompact.variable} ${geistSans.variable} ${geistMono.variable} ${raleway.variable} antialiased flex flex-col min-h-screen`} style={{ fontFamily: "var(--font-sf-compact)" }}>
-        <NavigationBar />
-        <main className="flex-1 bg-background">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );
